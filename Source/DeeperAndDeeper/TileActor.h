@@ -70,6 +70,7 @@ public:
 
 	void OnPuzzleComplete();
 	void Init();
+	void SpawnPuzzle();
 	void OnUnlockButtonPressed();
 
 protected:

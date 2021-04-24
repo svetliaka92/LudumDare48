@@ -89,8 +89,14 @@ void ATileActor::Init()
 		}
 	}
 
+	
+}
+
+void ATileActor::SpawnPuzzle()
+{
 	if (PuzzleClasses.Num() >= 1)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Spawning puzzle..."));
 		// spawn a random puzzle
 		int32 SpawnPuzzleIndex = FMath::RandRange(0, PuzzleClasses.Num() - 1);
 		if (PuzzleClasses[SpawnPuzzleIndex])

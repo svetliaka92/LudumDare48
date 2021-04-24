@@ -22,3 +22,8 @@ void APuzzle::Init(ATileActor* Parent)
 {
 	ParentTile = Parent;
 }
+
+void APuzzle::OnComponentInteracted(class APuzzleComponent* Component)
+{
+
+}
