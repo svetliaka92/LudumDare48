@@ -4,35 +4,30 @@
 #include "PuzzleComponent.h"
 #include "Puzzle.h"
 
-// Sets default values
-APuzzleComponent::APuzzleComponent()
+// Sets default values for this component's properties
+UPuzzleComponent::UPuzzleComponent()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+	// off to improve performance if you don't need them.
+	PrimaryComponentTick.bCanEverTick = false;
 
+	// ...
 }
 
-void APuzzleComponent::BeginPlay()
+void UPuzzleComponent::Init(class APuzzle* Puzzle)
 {
-	Super::BeginPlay();
-	
+	PuzzleParent = Puzzle;
 }
 
-void APuzzleComponent::Init(APuzzle* Puzzle)
+void UPuzzleComponent::OnComponentInteracted()
 {
-	ParentPuzzle = Puzzle;
-}
-
-void APuzzleComponent::Interact()
-{
-	if (ParentPuzzle != nullptr)
+	if (PuzzleParent)
 	{
-		ParentPuzzle->OnComponentInteracted(this);
+		PuzzleParent->OnComponentInteracted(this);
 	}
 }
 
-void APuzzleComponent::Tick(float DeltaTime)
+void UPuzzleComponent::Interact()
 {
-	Super::Tick(DeltaTime);
-
+	//..
 }

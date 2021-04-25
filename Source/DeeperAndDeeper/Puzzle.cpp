@@ -12,15 +12,14 @@ APuzzle::APuzzle()
 
 }
 
-void APuzzle::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
 void APuzzle::Init(ATileActor* Parent)
 {
 	ParentTile = Parent;
+}
+
+void APuzzle::OnComponentInteracted(class UPuzzleComponent* Component)
+{
+
 }
 
 void APuzzle::OnComponentInteracted(class APuzzleComponent* Component)

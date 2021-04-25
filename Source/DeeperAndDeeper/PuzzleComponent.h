@@ -3,30 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/ActorComponent.h"
 #include "IInteractable.h"
 #include "PuzzleComponent.generated.h"
 
-UCLASS()
-class DEEPERANDDEEPER_API APuzzleComponent : public AActor, public IIInteractable
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class DEEPERANDDEEPER_API UPuzzleComponent : public UActorComponent, public IIInteractable
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	APuzzleComponent();
 
-	virtual void Interact() override;
+public:	
+	// Sets default values for this component's properties
+	UPuzzleComponent();
+
 	virtual void Init(class APuzzle* Puzzle);
+	virtual void OnComponentInteracted();
+	virtual void Interact();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-	class APuzzle* ParentPuzzle;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	class APuzzle* PuzzleParent;
 };

@@ -15,13 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	APuzzle();
 
-	void Init(class ATileActor* Parent);
-	virtual void OnComponentInteracted(class APuzzleComponent* Component);
+	virtual void Init(class ATileActor* Parent);
+	virtual void OnComponentInteracted(class UPuzzleComponent* Component);
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	class ATileActor* ParentTile;
-	TArray<class APuzzleComponent*> Components;
 };
