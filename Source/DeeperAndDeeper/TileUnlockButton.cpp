@@ -41,8 +41,6 @@ void ATileUnlockButton::SetButtonEnableState(bool bState)
 
 void ATileUnlockButton::Interact()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interacting with object..."));
-
 	if (bEnableState && !bIsBusy)
 	{
 		bIsBusy = true;

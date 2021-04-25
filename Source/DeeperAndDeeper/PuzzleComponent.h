@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "IInteractable.h"
 #include "PuzzleComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class DEEPERANDDEEPER_API UPuzzleComponent : public UActorComponent, public IIInteractable
+class DEEPERANDDEEPER_API UPuzzleComponent : public UStaticMeshComponent, public IIInteractable
 {
 	GENERATED_BODY()
 
@@ -20,8 +20,12 @@ public:
 	virtual void Init(class APuzzle* Puzzle);
 	virtual void OnComponentInteracted();
 	virtual void Interact();
+	virtual void Enable(bool bFlag);
 
 protected:
 
 	class APuzzle* PuzzleParent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Button")
+	bool bIsEnabled = false;
 };

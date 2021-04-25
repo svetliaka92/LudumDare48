@@ -31,6 +31,7 @@ void AInfinitePuzzlesMode::SpawnTile()
 			NextTileLocation = Tile->GetNextTileTransform().GetLocation();
 			NextTileRotation = Tile->GetNextTileTransform().GetRotation().Rotator();
 			Tile->Init();
+			Tile->SpawnPuzzle();
 		}
 	}
 }

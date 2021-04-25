@@ -31,3 +31,8 @@ void UPuzzleComponent::Interact()
 {
 	//..
 }
+
+void UPuzzleComponent::Enable(bool bFlag)
+{
+	bIsEnabled = bFlag;
+}

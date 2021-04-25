@@ -61,6 +61,11 @@ void ATileActor::BeginPlay()
 
 void ATileActor::Init()
 {
+	if (bIsInited)
+		return;
+
+	bIsInited = true;
+
 	// lock tile
 	LockTile(true);
 
@@ -85,10 +90,16 @@ void ATileActor::Init()
 
 			// TODO - TEMP CODE - change to false
 			UnlockButton->Init(this);
-			UnlockButton->SetButtonEnableState(true);
+			UnlockButton->SetButtonEnableState(false);
+
+			if (bIsPrePlaced)
+				UnlockButton->SetButtonEnableState(true);
 		}
 	}
+}
 
+void ATileActor::SpawnPuzzle()
+{
 	if (PuzzleClasses.Num() >= 1)
 	{
 		// spawn a random puzzle
@@ -107,6 +118,7 @@ void ATileActor::Init()
 
 				// init the puzzle with this tile as its parent
 				SpawnedPuzzle->Init(this);
+				Puzzle = SpawnedPuzzle;
 			}
 		}
 	}
@@ -115,12 +127,15 @@ void ATileActor::Init()
 void ATileActor::OnPuzzleComplete()
 {
 	// enable tile unlock button
-	
+	if (UnlockButton != nullptr)
+		UnlockButton->SetButtonEnableState(true);
 }
 
 void ATileActor::OnUnlockButtonPressed()
 {
 	LockTile(false);
+
+	// tell the game mode that tile is done, so that it can update the score
 }
 
 void ATileActor::LockTile(bool bLockState)
@@ -198,9 +213,13 @@ void ATileActor::OnDestroyVolumeOverlap(UPrimitiveComponent* OverlappedComponent
 		{
 			GameMode->SpawnTile();
 		}
-		if (UnlockButton)
+		if (UnlockButton != nullptr)
 		{
 			UnlockButton->Destroy();
+		}
+		if (Puzzle != nullptr)
+		{
+			Puzzle->Destroy();
 		}
 		Destroy();
 	}

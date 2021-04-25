@@ -82,7 +82,14 @@ bool APlayerCharacter::TraceForInteractable()
 		Params
 	))
 	{
-		IIInteractable* InteractableHit = Cast<IIInteractable>(Hit.Actor);
+		// check if the component hit is an interactable
+		IIInteractable* InteractableHit = Cast<IIInteractable>(Hit.Component);
+		if (InteractableHit == nullptr)
+		{
+			// if the component hit is not an interactable, chech its owning actor
+			InteractableHit = Cast<IIInteractable>(Hit.Actor);
+		}
+
 		if (InteractableHit != nullptr)
 		{
 			Interactable = InteractableHit;
