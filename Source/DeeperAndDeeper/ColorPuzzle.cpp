@@ -97,12 +97,6 @@ void AColorPuzzle::OnComponentInteracted(UPuzzleComponent* Component)
 	if (bIsBusy)
 		return;
 
-	// cast the component to color button
-	// get the button slot
-	// check if any of the neighbors of the slot are empty
-	// if there is an empty slot - move button to it
-		// on button move - free current slot, and set the button in the new slot
-
 	UColorPuzzleButton* Button = Cast<UColorPuzzleButton>(Component);
 	if (Button != nullptr)
 	{
@@ -121,7 +115,14 @@ void AColorPuzzle::OnComponentInteracted(UPuzzleComponent* Component)
 
 			// check for puzzle complete
 			if (!bIsComplete && CheckPuzzleComplete())
+			{
+				for (UColorPuzzleButton* Btn : Buttons)
+				{
+					Btn->Enable(false);
+				}
+
 				CompletePuzzle();
+			}
 
 			bIsBusy = false;
 		}

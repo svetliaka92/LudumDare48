@@ -61,7 +61,10 @@ public:
 	class ATileUnlockButton* UnlockButton;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<class APuzzle>> PuzzleClasses;
+	TArray<TSubclassOf<class APuzzle>> ColorPuzzleClasses;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<class APuzzle>> LampPuzzleClasses;
 
 	UPROPERTY(EditAnywhere)
 	bool bIsPrePlaced = false;

@@ -38,6 +38,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = Camera)
 	float BaseLookUpRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crosshair")
+	TSubclassOf<class UUserWidget> MouseIconClass;
+
+	UPROPERTY()
+	class UUserWidget* MouseIcon;
+
 protected:
 	UPROPERTY(EditAnywhere)
 	float Reach = 300.f;
