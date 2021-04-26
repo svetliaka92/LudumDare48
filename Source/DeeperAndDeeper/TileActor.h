@@ -78,7 +78,6 @@ public:
 	void Init();
 	void SpawnPuzzle();
 	void OnUnlockButtonPressed();
-	void SpawnPuzzle();
 
 protected:
 	// Called when the game starts or when spawned
