@@ -3,6 +3,7 @@
 
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -20,6 +21,11 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	PlayerController = Controller;
+
+	if (MouseIconClass != nullptr)
+	{
+		MouseIcon = CreateWidget<UUserWidget>(GetWorld(), MouseIconClass);
+	}
 }
 
 // Called every frame
@@ -43,6 +49,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerCharacter::Interact);
 
@@ -82,7 +91,14 @@ bool APlayerCharacter::TraceForInteractable()
 		Params
 	))
 	{
-		IIInteractable* InteractableHit = Cast<IIInteractable>(Hit.Actor);
+		// check if the component hit is an interactable
+		IIInteractable* InteractableHit = Cast<IIInteractable>(Hit.Component);
+		if (InteractableHit == nullptr)
+		{
+			// if the component hit is not an interactable, chech its owning actor
+			InteractableHit = Cast<IIInteractable>(Hit.Actor);
+		}
+
 		if (InteractableHit != nullptr)
 		{
 			Interactable = InteractableHit;
@@ -115,6 +131,8 @@ void APlayerCharacter::EnableCrosshair(const bool bState)
 
 		bCrosshairState = bState;
 		// enable crosshair
+		if (MouseIcon)
+			MouseIcon->AddToViewport();
 	}
 	else
 	{
@@ -123,6 +141,8 @@ void APlayerCharacter::EnableCrosshair(const bool bState)
 
 		bCrosshairState = bState;
 		// disable crosshair
+		if (MouseIcon)
+			MouseIcon->RemoveFromViewport();
 	}
 }
 

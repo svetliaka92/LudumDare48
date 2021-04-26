@@ -61,7 +61,13 @@ public:
 	class ATileUnlockButton* UnlockButton;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<class APuzzle>> PuzzleClasses;
+	TArray<TSubclassOf<class APuzzle>> ColorPuzzleClasses;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<class APuzzle>> LampPuzzleClasses;
+
+	UPROPERTY(EditAnywhere)
+	bool bIsPrePlaced = false;
 
 	UFUNCTION(BlueprintCallable)
 	void LockTile(bool bLockState);
@@ -72,6 +78,7 @@ public:
 	void Init();
 	void SpawnPuzzle();
 	void OnUnlockButtonPressed();
+	void SpawnPuzzle();
 
 protected:
 	// Called when the game starts or when spawned
@@ -100,4 +107,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsPlayerActor(AActor* OtherActor);
+
+	bool bIsInited = false;
+	class APuzzle* Puzzle;
 };

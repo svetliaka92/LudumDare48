@@ -21,4 +21,7 @@ public:
 protected:
 
 	class ATileActor* ParentTile;
+	bool bIsComplete = false;
+
+	virtual void CompletePuzzle();
 };

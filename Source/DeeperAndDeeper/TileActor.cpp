@@ -61,6 +61,11 @@ void ATileActor::BeginPlay()
 
 void ATileActor::Init()
 {
+	if (bIsInited)
+		return;
+
+	bIsInited = true;
+
 	// lock tile
 	LockTile(true);
 
@@ -85,34 +90,66 @@ void ATileActor::Init()
 
 			// TODO - TEMP CODE - change to false
 			UnlockButton->Init(this);
-			UnlockButton->SetButtonEnableState(true);
+			UnlockButton->SetButtonEnableState(false);
+
+			if (bIsPrePlaced)
+				UnlockButton->SetButtonEnableState(true);
 		}
 	}
-
-	
 }
 
 void ATileActor::SpawnPuzzle()
 {
-	if (PuzzleClasses.Num() >= 1)
+	int32 RngPuzzleType = FMath::RandRange(0, 1);
+	//RngPuzzleType = 1;
+
+	if (RngPuzzleType == 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Spawning puzzle..."));
-		// spawn a random puzzle
-		int32 SpawnPuzzleIndex = FMath::RandRange(0, PuzzleClasses.Num() - 1);
-		if (PuzzleClasses[SpawnPuzzleIndex])
+		if (ColorPuzzleClasses.Num() >= 1)
 		{
-			APuzzle* SpawnedPuzzle = GetWorld()->SpawnActor<APuzzle>(PuzzleClasses[SpawnPuzzleIndex]);
-			if (SpawnedPuzzle)
+			// spawn a random color puzzle
+			int32 SpawnPuzzleIndex = FMath::RandRange(0, ColorPuzzleClasses.Num() - 1);
+			if (ColorPuzzleClasses[SpawnPuzzleIndex])
 			{
-				// place puzzle at spawn position
-				FVector PuzzleLocation = PuzzleSpawnPoint->GetComponentTransform().GetLocation();
-				FRotator PuzzleRotation = PuzzleSpawnPoint->GetComponentTransform().GetRotation().Rotator();
+				APuzzle* SpawnedPuzzle = GetWorld()->SpawnActor<APuzzle>(ColorPuzzleClasses[SpawnPuzzleIndex]);
+				if (SpawnedPuzzle)
+				{
+					// place puzzle at spawn position
+					FVector PuzzleLocation = PuzzleSpawnPoint->GetComponentTransform().GetLocation();
+					FRotator PuzzleRotation = PuzzleSpawnPoint->GetComponentTransform().GetRotation().Rotator();
 
-				SpawnedPuzzle->SetActorLocation(PuzzleLocation);
-				SpawnedPuzzle->SetActorRotation(PuzzleRotation);
+					SpawnedPuzzle->SetActorLocation(PuzzleLocation);
+					SpawnedPuzzle->SetActorRotation(PuzzleRotation);
 
-				// init the puzzle with this tile as its parent
-				SpawnedPuzzle->Init(this);
+					// init the puzzle with this tile as its parent
+					SpawnedPuzzle->Init(this);
+					Puzzle = SpawnedPuzzle;
+				}
+			}
+		}
+	}
+	else
+	{
+		if (LampPuzzleClasses.Num() >= 1)
+		{
+			// spawn a random lamp puzzle
+			int32 SpawnPuzzleIndex = FMath::RandRange(0, LampPuzzleClasses.Num() - 1);
+			if (LampPuzzleClasses[SpawnPuzzleIndex])
+			{
+				APuzzle* SpawnedPuzzle = GetWorld()->SpawnActor<APuzzle>(LampPuzzleClasses[SpawnPuzzleIndex]);
+				if (SpawnedPuzzle)
+				{
+					// place puzzle at spawn position
+					FVector PuzzleLocation = PuzzleSpawnPoint->GetComponentTransform().GetLocation();
+					FRotator PuzzleRotation = PuzzleSpawnPoint->GetComponentTransform().GetRotation().Rotator();
+
+					SpawnedPuzzle->SetActorLocation(PuzzleLocation);
+					SpawnedPuzzle->SetActorRotation(PuzzleRotation);
+
+					// init the puzzle with this tile as its parent
+					SpawnedPuzzle->Init(this);
+					Puzzle = SpawnedPuzzle;
+				}
 			}
 		}
 	}
@@ -121,12 +158,15 @@ void ATileActor::SpawnPuzzle()
 void ATileActor::OnPuzzleComplete()
 {
 	// enable tile unlock button
-	
+	if (UnlockButton != nullptr)
+		UnlockButton->SetButtonEnableState(true);
 }
 
 void ATileActor::OnUnlockButtonPressed()
 {
 	LockTile(false);
+
+	// tell the game mode that tile is done, so that it can update the score
 }
 
 void ATileActor::LockTile(bool bLockState)
@@ -183,7 +223,7 @@ void ATileActor::OnLockVolumeOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (IsPlayerActor(OtherActor))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("On LockVolumeOverlap"));
+		//UE_LOG(LogTemp, Warning, TEXT("On LockVolumeOverlap"));
 		LockTile(true);
 	}
 }
@@ -204,9 +244,13 @@ void ATileActor::OnDestroyVolumeOverlap(UPrimitiveComponent* OverlappedComponent
 		{
 			GameMode->SpawnTile();
 		}
-		if (UnlockButton)
+		if (UnlockButton != nullptr)
 		{
 			UnlockButton->Destroy();
+		}
+		if (Puzzle != nullptr)
+		{
+			Puzzle->Destroy();
 		}
 		Destroy();
 	}

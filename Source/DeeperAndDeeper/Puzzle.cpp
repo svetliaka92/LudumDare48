@@ -22,7 +22,10 @@ void APuzzle::OnComponentInteracted(class UPuzzleComponent* Component)
 
 }
 
-void APuzzle::OnComponentInteracted(class APuzzleComponent* Component)
+void APuzzle::CompletePuzzle()
 {
+	bIsComplete = true;
 
+	if (ParentTile != nullptr)
+		ParentTile->OnPuzzleComplete();
 }
